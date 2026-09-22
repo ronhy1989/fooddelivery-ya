@@ -1,0 +1,11 @@
+{
+  "name": "fooddelivery-ya",
+  "version": "1.0.0",
+  "description": "App de delivery autónoma",
+  "author": "ronhy1989",
+  "license": "MIT",
+  "scripts": {
+    "start": "npx serve .",
+    "deploy": "firebase deploy --only hosting"
+  }
+}

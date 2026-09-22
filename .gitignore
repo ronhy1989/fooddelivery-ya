@@ -1,0 +1,39 @@
+﻿# Dependencias
+node_modules/
+package-lock.json
+
+# Variables de entorno
+.env
+.env.local
+.env.production
+*.env
+
+# Backups (para no subir archivos temporales)
+index.html.bak*
+index.html.antes
+index.html.backup*
+index.html.VIEJO*
+*.bak
+*.backup
+*.bak-*
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*

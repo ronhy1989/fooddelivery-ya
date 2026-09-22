@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pide Pe' | Delivery en Lima 🇵🇪</title>
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEq0Z3n2eRnIM1zGVcPRxeLERGqB8_uqU&libraries=places&language=es&region=PE" async defer></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,system-ui,sans-serif}
+body{background:#fff9f0;color:#2d1e15;line-height:1.6}
+header{background:linear-gradient(135deg,#d91023,#a50d1a);color:#fff;padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-bottom:5px solid #ffb81c;box-shadow:0 8px 20px rgba(180,20,35,.25)}
+.logo{font-size:1.9rem;font-weight:800;text-shadow:3px 3px 0 #6e0812}
+.logo i{color:#ffb81c;margin-right:6px}
+.app-tag{background:rgba(0,0,0,.2);padding:.3rem 1rem;border-radius:40px;font-size:.85rem;border:1px solid rgba(255,184,28,.5)}
+.location-bar{background:#f7e9d7;padding:1.2rem 2rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1rem;border-bottom:2px dashed #c98a5a}
+.location-bar>i{color:#d91023;font-size:1.6rem}
+.location-input{display:flex;flex-wrap:wrap;align-items:center;background:#fff;border-radius:60px;padding:.2rem .2rem .2rem 1.5rem;border:1px solid #e6cdb3;flex:1 1 380px;max-width:700px;box-shadow:0 4px 10px rgba(0,0,0,.05)}
+.location-input input{border:none;padding:.9rem .5rem;font-size:1rem;flex:1;outline:none;background:transparent;min-width:180px}
+.location-input button{background:#ffb81c;border:none;border-radius:50px;padding:.8rem 1.5rem;font-weight:700;color:#2d1e15;cursor:pointer;box-shadow:0 4px 0 #c98a0f;border:1px solid #e6a410;display:flex;align-items:center;gap:6px;transition:.2s}
+.location-input button:hover{background:#ffc94d;transform:translateY(-2px)}
+.btn-gps{background:#fff!important;color:#d91023!important;box-shadow:0 4px 0 #d1bca3!important;border:1px solid #e6cdb3!important;width:50px;justify-content:center}
+.btn-gps.loading{background:#f7e9d7!important;color:#c98a0f!important}
+.btn-gps.success{background:#4caf50!important;color:#fff!important;box-shadow:0 4px 0 #2e7d32!important}
+.btn-gps.error{background:#d32f2f!important;color:#fff!important;box-shadow:0 4px 0 #b71c1c!important}
+.welcome-banner{max-width:1300px;margin:2rem auto 0;padding:0 1.5rem}
+.welcome-card{background:linear-gradient(135deg,#fff,#fef5e7);border:2px solid #ffb81c;border-radius:30px;padding:2rem;box-shadow:0 12px 30px rgba(180,20,35,.12);position:relative;overflow:hidden}
+.welcome-card::before{content:'🇵🇪';position:absolute;top:-30px;right:-20px;font-size:11rem;opacity:.06;transform:rotate(-15deg)}
+.welcome-title{font-size:1.7rem;font-weight:800;color:#d91023;margin-bottom:.5rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.location-highlight{display:inline-flex;align-items:center;gap:6px;background:#d91023;color:#fff;padding:.3rem .9rem;border-radius:40px;font-size:1rem;font-weight:600}
+.welcome-subtitle{font-size:1.05rem;color:#5e4a3a;margin-bottom:1rem}
+.welcome-stats{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.2rem;padding-top:1.2rem;border-top:1px dashed #e6cdb3}
+.stat-item{display:flex;align-items:center;gap:10px;font-size:.95rem;color:#5e4a3a}
+.stat-item i{background:#ffb81c;color:#2d1e15;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.stat-item strong{color:#d91023;display:block;font-size:1.1rem}
+.mapa-container{max-width:1300px;margin:1.5rem auto;padding:0 1.5rem}
+#mapa{height:380px;border-radius:24px;border:2px solid #ffb81c;box-shadow:0 10px 25px rgba(180,20,35,.15);background:linear-gradient(135deg,#fef5e7,#f7e9d7);display:flex;align-items:center;justify-content:center;color:#8f6e56;font-size:1.1rem;flex-direction:column;gap:10px;text-align:center;padding:1rem}
+#mapa i{font-size:3rem;color:#b37b4d}
+.container{max-width:1300px;margin:2rem auto;padding:0 1.5rem}
+.section-title{font-size:1.8rem;font-weight:800;color:#3f2c1f;display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap}
+.section-title i{color:#d91023}
+.section-badge{background:#ffb81c;color:#2d1e15;padding:.4rem 1rem;border-radius:40px;font-size:.85rem;font-weight:700;margin-left:auto}
+.restaurants-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.8rem}
+.restaurant-card{background:#fff;border-radius:24px;overflow:hidden;border:2px solid #f0dbc6;box-shadow:0 8px 20px rgba(150,70,20,.08);cursor:pointer;transition:.3s}
+.restaurant-card:hover{transform:translateY(-6px);border-color:#ffb81c;box-shadow:0 16px 32px rgba(180,20,35,.18)}
+.restaurant-cover{height:160px;background-size:cover;background-position:center;position:relative}
+.restaurant-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent 65%)}
+.restaurant-badge{position:absolute;top:12px;left:12px;background:#4caf50;color:#fff;padding:.35rem .9rem;border-radius:40px;font-size:.75rem;font-weight:700;text-transform:uppercase;z-index:2}
+.restaurant-eta{position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,.95);padding:.35rem .8rem;border-radius:40px;font-size:.8rem;font-weight:700;z-index:2;display:flex;gap:5px;align-items:center;color:#2d1e15}
+.restaurant-eta i{color:#d91023}
+.restaurant-body{padding:1.2rem 1.3rem 1.4rem}
+.restaurant-name{font-size:1.25rem;font-weight:800;color:#3f2c1f;margin-bottom:.3rem;display:flex;align-items:center;gap:8px}
+.restaurant-name i{color:#ffb81c}
+.restaurant-type{font-size:.85rem;color:#8f6e56;margin-bottom:.7rem}
+.restaurant-meta{display:flex;flex-wrap:wrap;gap:1rem;font-size:.82rem;color:#6e5a4b;margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px dashed #f0dbc6}
+.restaurant-meta span{display:flex;gap:5px;align-items:center}
+.restaurant-meta i{color:#ffb81c}
+.restaurant-actions{display:flex;gap:8px}
+.btn-select{flex:1;background:#ffb81c;color:#2d1e15;border:none;padding:.7rem;border-radius:40px;font-weight:700;cursor:pointer;box-shadow:0 3px 0 #c98a0f;display:flex;justify-content:center;gap:6px;transition:.2s;font-size:.9rem}
+.btn-select:hover{background:#ffc94d;transform:translateY(-2px);box-shadow:0 5px 0 #c98a0f}
+.btn-wsp-mini{width:44px;background:#25D366;color:#fff;border:none;border-radius:50%;cursor:pointer;box-shadow:0 3px 0 #128C7E;font-size:1.1rem;transition:.2s}
+.btn-wsp-mini:hover{background:#20b358;transform:translateY(-2px)}
+.selected-restaurant-panel{background:#fff;border-radius:24px;border:2px solid #ffb81c;padding:1.8rem;margin-bottom:2rem;box-shadow:0 10px 25px rgba(180,20,35,.1);animation:fadeIn .4s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.selected-header{display:flex;align-items:center;gap:1rem;padding-bottom:1rem;margin-bottom:1rem;border-bottom:2px dashed #ffb81c;flex-wrap:wrap}
+.selected-icon{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#d91023,#ffb81c);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:#fff}
+.selected-info h3{font-size:1.5rem;color:#3f2c1f;font-weight:800}
+.selected-info p{color:#6e5a4b;font-size:.9rem}
+.categoria-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.cat-tab{background:#fef5e7;border:2px solid #f0dbc6;color:#6e5a4b;padding:.5rem 1.1rem;border-radius:40px;font-size:.88rem;font-weight:600;cursor:pointer;transition:.2s}
+.cat-tab:hover{border-color:#ffb81c;color:#d91023}
+.cat-tab.active{background:#d91023;color:#fff;border-color:#d91023}
+.productos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem}
+.producto-card{background:#fffbf6;border-radius:18px;padding:1rem;border:1px solid #f0dbc6;display:flex;gap:1rem;transition:.2s}
+.producto-card:hover{border-color:#ffb81c;transform:translateY(-3px)}
+.producto-img{width:80px;height:80px;border-radius:14px;background-size:cover;background-position:center;flex-shrink:0}
+.producto-info{flex:1;display:flex;flex-direction:column}
+.producto-nombre{font-weight:700;color:#3f2c1f;font-size:1rem;margin-bottom:.2rem;line-height:1.2}
+.producto-desc{font-size:.78rem;color:#8f6e56;margin-bottom:.5rem;line-height:1.3}
+.producto-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.producto-precio{font-weight:800;color:#d91023;font-size:1.1rem}
+.btn-add-mini{background:#ffb81c;border:none;color:#2d1e15;width:34px;height:34px;border-radius:50%;cursor:pointer;box-shadow:0 2px 0 #c98a0f;transition:.2s}
+.btn-add-mini:hover{background:#ffc94d;transform:scale(1.1)}
+.hidden{display:none!important}
+footer{background:#2d1e15;color:#dbc6b0;text-align:center;padding:2rem 1rem;margin-top:3rem;border-top:6px solid #ffb81c}
+footer i{color:#ffb81c;margin:0 5px}
+.smart-assistant-container{position:fixed;bottom:20px;right:20px;z-index:99999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;pointer-events:none}
+.smart-assistant-container > * {pointer-events:auto}
+.assistant-window{width:400px;max-width:calc(100vw - 30px);background:#fff;border-radius:24px;box-shadow:0 25px 60px rgba(180,20,35,.45);border:2px solid #ffb81c;overflow:hidden;display:flex;flex-direction:column;max-height:70vh;height:600px;animation:popIn .35s;transform-origin:bottom right;position:relative;z-index:100000}
+@keyframes popIn{0%{opacity:0;transform:scale(.7) translateY(30px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+.assistant-header{background:linear-gradient(135deg,#d91023,#8b0a15);color:#fff;padding:1rem 1.2rem;display:flex;align-items:center;gap:12px;border-bottom:3px solid #ffb81c}
+.assistant-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ffb81c,#ffd98a);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#d91023;position:relative}
+.assistant-avatar::after{content:'';position:absolute;bottom:0;right:0;width:12px;height:12px;border-radius:50%;background:#4caf50;border:2px solid #fff}
+.assistant-info{flex:1}
+.assistant-name{font-weight:800;font-size:1.05rem}
+.assistant-status{font-size:.78rem;opacity:.9}
+.header-btn{background:rgba(255,255,255,.18);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;position:relative;z-index:10} .header-btn:active{transform:scale(.9)}
+.header-btn:hover{background:rgba(255,255,255,.32)}
+.chat-messages{flex:1;overflow-y:auto;padding:1.2rem;background:linear-gradient(to bottom,#fff9f0,#fef3e3);display:flex;flex-direction:column;gap:12px}
+.msg{max-width:85%;padding:.75rem 1rem;border-radius:18px;font-size:.92rem;line-height:1.45;word-wrap:break-word;animation:msgIn .3s}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.msg-bot{background:#fff;border:1px solid #f0dbc6;border-bottom-left-radius:4px;align-self:flex-start}
+.msg-user{background:linear-gradient(135deg,#d91023,#ff3347);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.msg-time{display:block;font-size:.68rem;opacity:.6;margin-top:4px}
+.msg-user .msg-time{color:rgba(255,255,255,.8)}
+.typing-indicator{display:flex;gap:4px;padding:.9rem 1.1rem;background:#fff;border-radius:18px;border-bottom-left-radius:4px;align-self:flex-start;border:1px solid #f0dbc6;width:fit-content}
+.typing-indicator span{width:8px;height:8px;background:#d91023;border-radius:50%;animation:typing 1.4s infinite}
+.typing-indicator span:nth-child(2){animation-delay:.2s}
+.typing-indicator span:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.quick-options{display:flex;flex-wrap:wrap;gap:6px;padding:0 1.2rem .8rem;background:#fef3e3}
+.chip{background:#fff;border:1.5px solid #ffb81c;color:#d91023;padding:.45rem .9rem;border-radius:40px;font-size:.82rem;font-weight:600;cursor:pointer;transition:.2s;display:flex;gap:6px;align-items:center}
+.chip:hover{background:#ffb81c;color:#2d1e15;transform:translateY(-1px)}
+.chat-input-area{display:flex;align-items:center;gap:8px;padding:.8rem 1rem;background:#fff;border-top:2px solid #f7e9d7}
+.chat-input{flex:1;border:1.5px solid #e6cdb3;border-radius:40px;padding:.7rem 1.2rem;font-size:.92rem;outline:none;background:#fffbf6;transition:.2s}
+.chat-input:focus{border-color:#ffb81c;background:#fff}
+.input-btn{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;font-size:1rem;transition:.2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.input-btn.send{background:linear-gradient(135deg,#d91023,#ff3347);color:#fff}
+.input-btn.send:hover{transform:scale(1.08)}
+.input-btn.mic{background:#ffb81c;color:#2d1e15;box-shadow:0 3px 0 #c98a0f}
+.input-btn.mic:hover{background:#ffc94d}
+.input-btn.mic.listening{background:#d32f2f;color:#fff;animation:pulseRed 1s infinite}
+@keyframes pulseRed{0%,100%{box-shadow:0 0 0 0 rgba(211,47,47,.6)}50%{box-shadow:0 0 0 12px rgba(211,47,47,0)}}
+.smart-btn{width:70px;height:70px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,#d91023,#ffb81c,#d91023);background-size:200% 200%;color:#fff;font-size:1.8rem;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 25px rgba(180,20,35,.45);position:relative;animation:gradientShift 4s ease infinite;transition:transform .2s}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.smart-btn:hover{transform:scale(1.08)}
+.smart-btn::before{content:'';position:absolute;inset:-4px;border-radius:50%;border:3px solid #ffb81c;opacity:0;animation:pulseRing 2s infinite}
+@keyframes pulseRing{0%{opacity:.8;transform:scale(.95)}100%{opacity:0;transform:scale(1.4)}}
+.notification-dot{position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:#4caf50;border:2px solid #fff;animation:pulseDot 1.5s infinite}
+@keyframes pulseDot{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+@media(max-width:700px){
+  .logo{font-size:1.5rem}
+  .location-input{flex-direction:column;padding:.8rem}
+  .location-input input,.location-input button{width:100%;justify-content:center;text-align:center}
+  .restaurants-grid{grid-template-columns:1fr}
+  .assistant-window{width:100vw;height:100vh;max-height:100vh;border-radius:0}
+  .smart-assistant-container{bottom:15px;right:15px}
+  .smart-btn{width:60px;height:60px;font-size:1.5rem}
+  .productos-grid{grid-template-columns:1fr}
+  #mapa{height:280px}
+  .welcome-title{font-size:1.3rem}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><i class="fas fa-drumstick-bite"></i> Pide Pe'</div>
+  <div class="app-tag"><i class="fas fa-bolt"></i> Delivery al toque · Lima · S/</div>
+</header>
+
+<div class="location-bar">
+  <i class="fas fa-map-pin"></i>
+  <div class="location-input">
+    <input type="text" id="addressInput" placeholder="Ingresa tu distrito (Miraflores, San Isidro...)" value="" autocomplete="off">
+    <button id="searchBtn"><i class="fas fa-magnifying-glass-location"></i> Buscar</button>
+    <button id="gpsBtn" class="btn-gps" title="Usar mi ubicación actual"><i class="fas fa-location-crosshairs"></i></button>
+  </div>
+</div>
+
+<div class="welcome-banner">
+  <div class="welcome-card">
+    <h2 class="welcome-title">
+      <i class="fas fa-map-location-dot"></i>
+      Veo que te encuentras en <span class="location-highlight" id="welcomeLocation"><i class="fas fa-location-dot"></i> Detectando tu ubicación...</span>
+    </h2>
+    <p class="welcome-subtitle" id="welcomeSubtitle">📡 Activando GPS para encontrar tu ubicación real...</p>
+    <div class="welcome-stats" id="welcomeStats"></div>
+  </div>
+</div>
+
+<div class="mapa-container">
+  <div id="mapa">
+    <i class="fas fa-map"></i>
+    <p>Cargando mapa de Lima...</p>
+  </div>
+</div>
+
+<div class="container">
+  <div id="restaurantsSection">
+    <div class="section-title">
+      <i class="fas fa-store"></i> Restaurantes cercanos
+      <span class="section-badge" id="countBadge">0 disponibles</span>
+    </div>
+    <div class="restaurants-grid" id="restaurantsGrid"></div>
+  </div>
+
+  <div id="selectedRestaurantPanel" class="selected-restaurant-panel hidden">
+    <div class="selected-header">
+      <div class="selected-icon"><i class="fas fa-drumstick-bite" id="selIcon"></i></div>
+      <div class="selected-info">
+        <h3 id="selRestName">Restaurante</h3>
+        <p id="selRestInfo">Carta completa</p>
+      </div>
+    </div>
+    <div class="categoria-tabs" id="categoriaTabs"></div>
+    <div class="productos-grid" id="productosGrid"></div>
+  </div>
+</div>
+
+<footer>
+  <p><i class="fas fa-phone-alt"></i> Pedidos: (01) 555-POLLO</p>
+  <p><i class="fas fa-clock"></i> Lunes a Domingo 11:00-23:30</p>
+  <p style="margin-top:1rem;opacity:.7">© 2026 Pide Pe' - ronhy1989 · Precios en Soles (S/)</p>
+</footer>
+
+<div class="smart-assistant-container">
+  <div class="assistant-window hidden" id="assistantWindow">
+    <div class="assistant-header">
+      <div class="assistant-avatar"><i class="fas fa-robot"></i></div>
+      <div class="assistant-info">
+        <div class="assistant-name">Pide Bot <i class="fas fa-circle-check" style="color:#4caf50;font-size:.8rem"></i></div>
+        <div class="assistant-status" id="assistantStatus">En línea · Delivery en Lima</div>
+      </div>
+      <button class="header-btn" id="btnCloseAssistant"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="quick-options" id="quickOptions"></div>
+    <div class="chat-input-area">
+      <button class="input-btn mic" id="btnMic" title="Hablar"><i class="fas fa-microphone"></i></button>
+      <input type="text" class="chat-input" id="chatInput" placeholder="Escribe tu pedido...">
+      <button class="input-btn send" id="btnSend" title="Enviar"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+  <button class="smart-btn" id="smartBtn" title="Asistente Pide Bot">
+    <i class="fas fa-robot"></i>
+    <span class="notification-dot"></span>
+  </button>
+</div><script>
+const CONFIG = {
+  GOOGLE_MAPS_API_KEY: 'AIzaSyDEq0Z3n2eRnIM1zGVcPRxeLERGqB8_uqU',
+  GEMINI_API_KEY: '',
+  GEMINI_MODEL: 'gemini-1.5-flash',
+  telefonoWhatsApp: '51914724078',
+  monedaSimbolo: 'S/',
+  costoEnvioDefault: 5.00,
+  centroPorDefecto: { lat: -12.1219, lng: -77.0297 }
+};
+
+const RESTAURANTES = [
+  {
+    id: 'polleria-rockys', nombre: "Pollería Rockys", tipo: 'Pollo a la brasa',
+    icono: 'fas fa-drumstick-bite',
+    zona: ['miraflores','san isidro','surco','barranco','san borja','la molina','lince','magdalena','surquillo','san miguel','lima','jesus maria','pueblo libre'],
+    lat: -12.1219, lng: -77.0297, rating: 4.8, reviews: 1243, eta: '25-35 min', envio: 5.00, abierto: true,
+    cover: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=600&auto=format&fit=crop&q=80',
+    categorias: {
+      'Pollos a la Brasa': [
+        { id:'p1', nombre:'Pollo Entero a la Brasa', descripcion:'Pollo entero + papas + ensalada + salsas', precio:65.00, prepTime: 35, badge:'⭐ Top', image:'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400' },
+        { id:'p2', nombre:'1/2 Pollo a la Brasa', descripcion:'Medio pollo + papas + ensalada', precio:42.00, prepTime: 25, badge:'Familiar', image:'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400' },
+        { id:'p3', nombre:'1/4 Pollo a la Brasa', descripcion:'Cuarto de pollo + papas + ensalada', precio:25.00, prepTime: 20, badge:'Personal', image:'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400' }
+      ],
+      'Combos': [
+        { id:'c1', nombre:'Combo Familiar (4-5 pers)', descripcion:'Pollo entero + papas grandes + gaseosa 1.5L + ensalada', precio:85.00, prepTime: 40, badge:'💥 Ahorro', image:'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400' },
+        { id:'c2', nombre:'Combo Pareja', descripcion:'1/2 pollo + papas + 2 chicha morada', precio:55.00, prepTime: 28, badge:'❤️ Pareja', image:'https://images.unsplash.com/photo-1608039755401-742074f0548d?w=400' }
+      ],
+      'Bebidas': [
+        { id:'b1', nombre:'Chicha Morada 1L', descripcion:'Casera, bien helada', precio:12.00, prepTime: 3, badge:'🇵🇪', image:'https://images.unsplash.com/photo-1546173159-315724a31696?w=400' },
+        { id:'b2', nombre:'Inca Kola 1.5L', descripcion:'La bebida del Perú', precio:10.00, prepTime: 2, badge:'🥤', image:'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400' }
+      ]
+    }
+  },
+  {
+    id: 'cevicheria-punta-sal', nombre: 'Cevichería Punta Sal', tipo: 'Ceviches y mariscos',
+    icono: 'fas fa-fish',
+    zona: ['miraflores','barranco','san isidro','chorrillos','surco','san borja','lima','magdalena','san miguel','pueblo libre','surquillo'],
+    lat: -12.1300, lng: -77.0300, rating: 4.9, reviews: 892, eta: '30-40 min', envio: 6.00, abierto: true,
+    cover: 'https://images.unsplash.com/photo-1551248429-40975aa4de74?w=600&auto=format&fit=crop&q=80',
+    categorias: {
+      'Ceviches': [
+        { id:'cv1', nombre:'Ceviche Clásico', descripcion:'Pescado fresco, limón, ají limo, camote y choclo', precio:38.00, prepTime: 12, badge:'⭐ Top', image:'https://images.unsplash.com/photo-1551248429-40975aa4de74?w=400' },
+        { id:'cv2', nombre:'Ceviche Mixto', descripcion:'Pescado + mariscos + leche de tigre', precio:48.00, prepTime: 15, badge:'Premium', image:'https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=400' }
+      ],
+      'Arroz y Platos': [
+        { id:'ar1', nombre:'Arroz con Mariscos', descripcion:'Arroz con mariscos frescos y ají amarillo', precio:45.00, prepTime: 20, badge:'🔥', image:'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400' },
+        { id:'ar2', nombre:'Jalea Mixta', descripcion:'Pescado y mariscos fritos con yucas', precio:52.00, prepTime: 22, badge:'Compartir', image:'https://images.unsplash.com/photo-1562967914-608f82629710?w=400' }
+      ]
+    }
+  },
+  {
+    id: 'chifa-dragon', nombre: 'Chifa Dragón Dorado', tipo: 'Chifa peruano-chino',
+    icono: 'fas fa-bowl-food',
+    zona: ['miraflores','surco','san isidro','la molina','san borja','surquillo','lince','lima','san miguel','pueblo libre'],
+    lat: -12.1000, lng: -77.0200, rating: 4.6, reviews: 658, eta: '20-30 min', envio: 4.50, abierto: true,
+    cover: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&auto=format&fit=crop&q=80',
+    categorias: {
+      'Arroz Chaufa': [
+        { id:'ch1', nombre:'Arroz Chaufa de Pollo', descripcion:'Arroz frito con pollo, huevo y cebollita china', precio:22.00, prepTime: 10, badge:'⭐ Top', image:'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400' },
+        { id:'ch2', nombre:'Arroz Chaufa de Carne', descripcion:'Con carne de res salteada', precio:26.00, prepTime: 12, badge:'Popular', image:'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400' },
+        { id:'ch3', nombre:'Arroz Chaufa Especial', descripcion:'Pollo + carne + chancho + langostinos', precio:32.00, prepTime: 15, badge:'💥 Especial', image:'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400' }
+      ],
+      'Tallarines': [
+        { id:'tl1', nombre:'Tallarín Saltado de Pollo', descripcion:'Tallarines con pollo, verduras y salsa de soya', precio:24.00, prepTime: 12, badge:'Clásico', image:'https://images.unsplash.com/photo-1552611052-33e04de081de?w=400' }
+      ]
+    }
+  },
+  {
+    id: 'anticuchos-misti', nombre: 'Anticuchos Doña Misti', tipo: 'Comida criolla',
+    icono: 'fas fa-utensils',
+    zona: ['miraflores','barranco','surco','san isidro','lima','chorrillos','magdalena','san miguel','pueblo libre','surquillo'],
+    lat: -12.1450, lng: -77.0200, rating: 4.7, reviews: 423, eta: '35-45 min', envio: 5.50, abierto: true,
+    cover: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80',
+    categorias: {
+      'Anticuchos': [
+        { id:'an1', nombre:'Anticuchos (4 palitos)', descripcion:'Corazón de res marinado + papas + choclo', precio:28.00, prepTime: 15, badge:'⭐ Top', image:'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' },
+        { id:'an2', nombre:'Anticuchos (6 palitos)', descripcion:'Porción grande', precio:38.00, prepTime: 18, badge:'Familiar', image:'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' }
+      ],
+      'Criollos': [
+        { id:'cr1', nombre:'Lomo Saltado', descripcion:'Lomo fino + papas + arroz + verduras', precio:42.00, prepTime: 18, badge:'🇵🇪 Clásico', image:'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400' },
+        { id:'cr2', nombre:'Ají de Gallina', descripcion:'Con arroz, papa y huevo', precio:32.00, prepTime: 15, badge:'Criollo', image:'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400' }
+      ],
+      'Postres': [
+        { id:'po1', nombre:'Suspiro a la Limeña', descripcion:'Postre tradicional limeño', precio:14.00, prepTime: 5, badge:'🍮', image:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400' },
+        { id:'po2', nombre:'Picarones (6u)', descripcion:'Con miel de chancaca', precio:12.00, prepTime: 12, badge:'🍩', image:'https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?w=400' }
+      ]
+    }
+  },
+  {
+    id: 'pizzeria-italia', nombre: 'Pizzería Bella Italia', tipo: 'Pizza artesanal',
+    icono: 'fas fa-pizza-slice',
+    zona: ['miraflores','barranco','san isidro','surco','lima','san borja','la molina','magdalena','pueblo libre','surquillo'],
+    lat: -12.1160, lng: -77.0350, rating: 4.6, reviews: 512, eta: '25-35 min', envio: 5.00, abierto: true,
+    cover: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&fit=crop&q=80',
+    categorias: {
+      'Pizzas': [
+        { id:'pz1', nombre:'Pizza Margherita Familiar', descripcion:'Salsa de tomate, mozzarella y albahaca', precio:42.00, prepTime: 20, badge:'⭐', image:'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400' },
+        { id:'pz2', nombre:'Pizza Pepperoni Grande', descripcion:'Con pepperoni picante', precio:48.00, prepTime: 22, badge:'🔥', image:'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400' },
+        { id:'pz3', nombre:'Pizza Suprema Familiar', descripcion:'Pepperoni, champiñones, pimiento, aceitunas', precio:55.00, prepTime: 25, badge:'💥', image:'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400' }
+      ]
+    }
+  }
+];
+
+const estado = {
+  ubicacionActual: '',
+  coords: { lat: -12.1219, lng: -77.0297 },
+  restaurantesCercanos: [],
+  restauranteSeleccionado: null,
+  categoriaActiva: null,
+  pedido: [],
+  etapaPedido: null,
+  datosEntrega: { nombre:null, direccion:null, telefono:null, pago:null },
+  esperandoRespuesta: null,
+  numPedido: null,
+  gpsUsado: false,
+  gpsListo: false
+};
+
+const normalizar = (t) => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\w\s]/g,' ').replace(/\s+/g,' ').trim();
+const formatearPrecio = (n) => CONFIG.monedaSimbolo + ' ' + n.toFixed(2);
+
+function calcularDistancia(lat1, lng1, lat2, lng2) {
+  const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLng = (lng2-lng1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ============================================================
+// GEOCODIFICACIÓN INVERSA CON GOOGLE MAPS API
+// Funciona en CUALQUIER lugar del Perú y del mundo
+// ============================================================
+let geocoderInstance = null;
+
+function obtenerGeocoder() {
+  if (!geocoderInstance && typeof google !== 'undefined' && google.maps) {
+    geocoderInstance = new google.maps.Geocoder();
+  }
+  return geocoderInstance;
+}
+
+async function detectarDistritoPorCoords(lat, lng) {
+  // Si Google Maps no cargó, usar fallback básico
+  const geocoder = obtenerGeocoder();
+  
+  if (!geocoder) {
+    console.warn('⚠️ Google Maps no cargado, usando fallback');
+    return { distrito: 'Lima', ciudad: 'Perú', distancia: 0, direccionCompleta: `${lat.toFixed(4)}, ${lng.toFixed(4)}` };
+  }
+  
+  return new Promise((resolve) => {
+    geocoder.geocode(
+      { location: { lat, lng }, language: 'es', region: 'PE' },
+      (results, status) => {
+        if (status === 'OK' && results && results[0]) {
+          const result = results[0];
+          const componentes = result.address_components || [];
+          
+          // Extraer distrito (locality o sublocality o administrative_area_level_3)
+          let distrito = '';
+          let ciudad = '';
+          let provincia = '';
+          let departamento = '';
+          let pais = '';
+          
+          componentes.forEach(c => {
+            if (c.types.includes('locality')) distrito = c.long_name;
+            if (c.types.includes('administrative_area_level_3') && !distrito) distrito = c.long_name;
+            if (c.types.includes('sublocality') && !distrito) distrito = c.long_name;
+            if (c.types.includes('administrative_area_level_2')) provincia = c.long_name;
+            if (c.types.includes('administrative_area_level_1')) departamento = c.long_name;
+            if (c.types.includes('country')) pais = c.long_name;
+          });
+          
+          // Determinar la ciudad principal
+          if (departamento.toLowerCase().includes('lima') || provincia.toLowerCase().includes('lima')) {
+            ciudad = 'Lima';
+            if (!distrito && provincia) distrito = provincia;
+          } else if (departamento) {
+            ciudad = departamento;
+            if (!distrito && provincia) distrito = provincia;
+          } else {
+            ciudad = provincia || 'Perú';
+          }
+          
+          // Si no hay distrito, usar el primer componente disponible
+          if (!distrito && componentes.length > 0) {
+            distrito = componentes[0].long_name;
+          }
+          
+          // Calcular distancia aproximada al centro de Lima (solo referencial)
+          const distanciaLima = calcularDistancia(lat, lng, -12.0464, -77.0428);
+          
+          console.log('✅ Geocodificación inversa:', {
+            distrito, ciudad, provincia, departamento, pais,
+            direccionCompleta: result.formatted_address,
+            distanciaLima: distanciaLima.toFixed(1) + ' km'
+          });
+          
+          resolve({
+            distrito: distrito || 'Sin distrito',
+            ciudad: ciudad || 'Perú',
+            provincia,
+            departamento,
+            pais,
+            distancia: distanciaLima,
+            direccionCompleta: result.formatted_address
+          });
+        } else {
+          console.warn('⚠️ Geocodificación falló:', status);
+          resolve({ 
+            distrito: 'Lima', 
+            ciudad: 'Perú', 
+            distancia: 0,
+            direccionCompleta: `${lat.toFixed(4)}, ${lng.toFixed(4)}`
+          });
+        }
+      }
+    );
+  });
+}
+
+function buscarRestaurantesCercanos(ubicacion) {
+  const u = normalizar(ubicacion);
+  let enc = RESTAURANTES.filter(r => r.zona.some(z => u.includes(normalizar(z))));
+  if (enc.length === 0) enc = [...RESTAURANTES];
+  enc.sort((a,b) => {
+    const dA = calcularDistancia(estado.coords.lat, estado.coords.lng, a.lat, a.lng);
+    const dB = calcularDistancia(estado.coords.lat, estado.coords.lng, b.lat, b.lng);
+    return dA - dB;
+  });
+  return enc;
+}
+
+
+// ============================================================
+// CÁLCULO INTELIGENTE DE TIEMPO
+// Toma el plato MÁS LENTO + extra por cantidad
+// ============================================================
+function encontrarProductoEnRestaurante(productoId, restaurante) {
+  if (!restaurante || !restaurante.categorias) return null;
+  for (const cat in restaurante.categorias) {
+    const encontrado = restaurante.categorias[cat].find(p => p.id === productoId);
+    if (encontrado) return encontrado;
+  }
+  return null;
+}
+
+function calcularTiempoEntrega(pedido, restaurante, coordsCliente) {
+  if (!pedido || pedido.length === 0 || !restaurante) {
+    return { prepTime: 0, dispatchTime: 0, travelTime: 0, buffer: 0, total: 0, platoMasLento: null };
+  }
+  
+  // 1. PREP TIME: el plato que MÁS tarda manda
+  let platoMasLento = null;
+  let prepTimeMax = 0;
+  
+  pedido.forEach(item => {
+    const producto = encontrarProductoEnRestaurante(item.id, restaurante);
+    const prep = producto?.prepTime || 15;
+    if (prep > prepTimeMax) {
+      prepTimeMax = prep;
+      platoMasLento = producto?.nombre || 'Plato';
+    }
+  });
+  
+  // Extra por cantidad (+2 min por cada plato adicional)
+  const cantidadTotal = pedido.reduce((s, i) => s + i.cantidad, 0);
+  const extraPorCantidad = Math.max(0, (cantidadTotal - 1) * 2);
+  const prepTime = prepTimeMax + extraPorCantidad;
+  
+  // 2. DISPATCH: conductor al restaurante
+  const distanciaKm = calcularDistancia(
+    restaurante.lat, restaurante.lng,
+    coordsCliente.lat, coordsCliente.lng
+  );
+  const dispatchTime = Math.round(5 + Math.min(10, distanciaKm * 0.5));
+  
+  // 3. TRAVEL: restaurante → cliente (3 min/km)
+  const travelTime = Math.round(distanciaKm * 3);
+  
+  // 4. BUFFER: margen de seguridad
+  const buffer = 5;
+  
+  // TOTAL
+  const total = prepTime + dispatchTime + travelTime + buffer;
+  
+  return {
+    prepTime,
+    prepTimeMax,
+    extraPorCantidad,
+    dispatchTime,
+    travelTime,
+    buffer,
+    total,
+    distanciaKm: Math.round(distanciaKm * 10) / 10,
+    cantidadPlatos: cantidadTotal,
+    platoMasLento,
+    horaEntregaEstimada: new Date(Date.now() + total * 60000).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })
+  };
+}
+
+// ============================================================
+// GENERAR NÚMERO DE PEDIDO ÚNICO
+// ============================================================
+function generarNumeroPedido() {
+  const fecha = new Date();
+  const año = fecha.getFullYear().toString().slice(-2);
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  const random = Math.floor(Math.random() * 9000) + 1000;
+  return `PE-${año}${mes}${dia}-${random}`;
+}
+function calcularTotal() {
+  const subtotal = estado.pedido.reduce((s,i) => s + i.precio * i.cantidad, 0);
+  const envio = estado.pedido.length > 0 && estado.restauranteSeleccionado ? estado.restauranteSeleccionado.envio : 0;
+  return { subtotal, envio, total: subtotal + envio };
+}
+
+function buscarProducto(texto) {
+  if (!estado.restauranteSeleccionado) return null;
+  const productos = [];
+  for (const cat in estado.restauranteSeleccionado.categorias) {
+    estado.restauranteSeleccionado.categorias[cat].forEach(p => productos.push({...p, categoria: cat}));
+  }
+  const t = normalizar(texto);
+  for (const p of productos) {
+    if (normalizar(p.nombre).includes(t) || t.includes(normalizar(p.nombre))) return p;
+  }
+  const mapeo = { 'entero':'p1','medio':'p2','cuarto':'p3','combo':'c1','pareja':'c2','chicha':'b1','inca':'b2','ceviche':'cv1','mixto':'cv2','arroz':'ar1','jalea':'ar2','chaufa':'ch1','tallarin':'tl1','anticucho':'an1','lomo':'cr1','aji':'cr2','suspiro':'po1','picaron':'po2','margherita':'pz1','pepperoni':'pz2','suprema':'pz3' };
+  for (const key in mapeo) if (t.includes(key)) return productos.find(p => p.id === mapeo[key]);
+  return null;
+}
+
+function hablar(texto) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(texto.replace(/<[^>]+>/g,'').replace(/[*_]/g,''));
+  u.lang = 'es-PE'; u.rate = 1.05; u.pitch = 1.1;
+  window.speechSynthesis.speak(u);
+}
+
+const chatMessages = document.getElementById('chatMessages');
+const quickOptions = document.getElementById('quickOptions');
+const chatInput = document.getElementById('chatInput');
+const assistantWindow = document.getElementById('assistantWindow');
+const smartBtn = document.getElementById('smartBtn');
+const assistantStatus = document.getElementById('assistantStatus');
+const btnMic = document.getElementById('btnMic');
+
+function agregarMensaje(texto, tipo='bot', opciones=[]) {
+  if (!chatMessages) return;
+  const hora = new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+  const div = document.createElement('div');
+  div.className = `msg msg-${tipo}`;
+  div.innerHTML = `${texto.replace(/\n/g,'<br>')}<span class="msg-time">${hora}</span>`;
+  chatMessages.appendChild(div);
+  if (opciones && opciones.length > 0 && quickOptions) {
+    quickOptions.innerHTML = '';
+    opciones.forEach(op => {
+      const chip = document.createElement('button');
+      chip.className = 'chip';
+      chip.innerHTML = op.icono ? `<i class="${op.icono}"></i> ${op.texto}` : op.texto;
+      chip.onclick = () => {
+        quickOptions.innerHTML = '';
+        agregarMensaje(op.texto, 'user');
+        procesarEntrada(op.valor || op.texto);
+      };
+      quickOptions.appendChild(chip);
+    });
+  }
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function mostrarTyping() {
+  if (!chatMessages) return;
+  const div = document.createElement('div');
+  div.className = 'typing-indicator';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function ocultarTyping() {
+  const t = document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+function responderConDelay(texto, opciones=[], delay=700) {
+  mostrarTyping();
+  if (assistantStatus) assistantStatus.textContent = 'Escribiendo...';
+  setTimeout(() => {
+    ocultarTyping();
+    if (assistantStatus) assistantStatus.textContent = 'En línea · Delivery en Lima';
+    agregarMensaje(texto, 'bot', opciones);
+    hablar(texto);
+  }, delay);
+}
+
+function saludoInicial() {
+  const cercanos = estado.restaurantesCercanos;
+  let saludo = `¡Hola! 👋 Soy <strong>Pide Bot</strong>.\n\n`;
+  saludo += `📍 Te encuentro en <strong>${estado.ubicacionActual}</strong>.\n\n`;
+  if (cercanos.length > 0) {
+    saludo += `🍽️ Tus <strong>restaurantes cercanos</strong>:\n\n`;
+    cercanos.slice(0,5).forEach((r,i) => {
+      const dist = calcularDistancia(estado.coords.lat, estado.coords.lng, r.lat, r.lng);
+      saludo += `${i+1}. <strong>${r.nombre}</strong> (${r.tipo})\n   ⭐ ${r.rating} · ⏱️ ${r.eta} · 🚚 ${formatearPrecio(r.envio)} · 📍 ${dist.toFixed(1)} km\n`;
+    });
+    saludo += `\n¿Qué te provoca hoy?`;
+    responderConDelay(saludo, [
+      { texto:'📖 Ver todos', valor:'ver restaurantes', icono:'fas fa-list' },
+      { texto:'🍗 Pedir ahora', valor:'elegir restaurante', icono:'fas fa-shopping-cart' },
+      { texto:'💬 Hablar con humano', valor:'hablar con humano', icono:'fas fa-user' }
+    ]);
+  } else {
+    saludo += `⚠️ Aún no tenemos restaurantes en tu zona.`;
+    responderConDelay(saludo, [
+      { texto:'📍 Cambiar ubicación', valor:'cambiar ubicacion', icono:'fas fa-map-pin' }
+    ]);
+  }
+}
+
+function mostrarRestaurantes() {
+  const c = estado.restaurantesCercanos;
+  if (!c.length) { responderConDelay('No hay restaurantes cercanos.'); return; }
+  let texto = `🍽️ <strong>Restaurantes disponibles cerca de ti:</strong>\n\n`;
+  c.forEach((r,i) => {
+    const dist = calcularDistancia(estado.coords.lat, estado.coords.lng, r.lat, r.lng);
+    texto += `<strong>${i+1}. ${r.nombre}</strong>\n   📌 ${r.tipo}\n   ⭐ ${r.rating} (${r.reviews})\n   ⏱️ ${r.eta} · 🚚 ${formatearPrecio(r.envio)} · 📍 ${dist.toFixed(1)} km\n\n`;
+  });
+  texto += `Dime el nombre para ver su carta.`;
+  responderConDelay(texto, c.map(r => ({ texto: r.nombre, valor: `elegir ${r.nombre}`, icono: r.icono })));
+}
+
+function elegirRestaurante(nombre) {
+  const r = estado.restaurantesCercanos.find(x => normalizar(x.nombre).includes(normalizar(nombre)));
+  if (!r) { responderConDelay(`No encontré ese restaurante.`); return; }
+  estado.restauranteSeleccionado = r;
+  estado.categoriaActiva = Object.keys(r.categorias)[0];
+  estado.pedido = [];
+  renderRestauranteSeleccionado();
+  const panel = document.getElementById('selectedRestaurantPanel');
+  if (panel) {
+    panel.classList.remove('hidden');
+    panel.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  let texto = `✅ Elegiste <strong>${r.nombre}</strong>\n\n📖 <strong>Carta:</strong>\n\n`;
+  for (const cat in r.categorias) {
+    texto += `<strong>▸ ${cat}</strong>\n`;
+    r.categorias[cat].forEach(p => { texto += `  • ${p.nombre} — ${formatearPrecio(p.precio)}\n`; });
+    texto += '\n';
+  }
+  texto += `¿Qué te provoca?`;
+  responderConDelay(texto, [
+    { texto:'🍽️ Ver categorías', valor:'hacer pedido', icono:'fas fa-list' },
+    { texto:'🛒 Ver carrito', valor:'ver carrito', icono:'fas fa-shopping-bag' }
+  ], 900);
+}
+
+function iniciarPedido() {
+  if (!estado.restauranteSeleccionado) { responderConDelay('Primero elegí un restaurante.', [{ texto:'🍽️ Ver restaurantes', valor:'elegir restaurante', icono:'fas fa-list' }]); return; }
+  const categorias = Object.keys(estado.restauranteSeleccionado.categorias);
+  let texto = `🍗 <strong>${estado.restauranteSeleccionado.nombre}</strong>\n\nCategorías:\n\n`;
+  categorias.forEach((cat,i) => { texto += `${i+1}. ${cat}\n`; });
+  texto += `\n¿Cuál te interesa?`;
+  responderConDelay(texto, categorias.map(cat => ({ texto: cat, valor:`categoria ${cat}`, icono:'fas fa-tag' })));
+}
+
+function mostrarCategoria(categoria) {
+  const r = estado.restauranteSeleccionado;
+  const productos = r?.categorias[categoria];
+  if (!productos) return;
+  let texto = `<strong>${categoria}</strong>\n\n`;
+  productos.forEach(p => { texto += `• <strong>${p.nombre}</strong> — ${formatearPrecio(p.precio)}\n  <em>${p.descripcion}</em>\n\n`; });
+  texto += `Dime qué plato agregar.`;
+  responderConDelay(texto, productos.map(p => ({ texto:`${p.nombre} (${formatearPrecio(p.precio)})`, valor:`agregar ${p.nombre}`, icono:'fas fa-plus-circle' })));
+}
+
+function agregarProducto(nombreProducto, cantidad = 1) {
+  if (!estado.restauranteSeleccionado) { responderConDelay('Primero elegí un restaurante.'); return; }
+  const producto = buscarProducto(nombreProducto);
+  if (!producto) {
+    responderConDelay(`No encontré "${nombreProducto}" en la carta.`, [{ texto:'📖 Ver categorías', valor:'hacer pedido', icono:'fas fa-list' }]);
+    return;
+  }
+  const existente = estado.pedido.find(i => i.id === producto.id);
+  if (existente) existente.cantidad += cantidad;
+  else estado.pedido.push({ ...producto, cantidad, restaurante: estado.restauranteSeleccionado.nombre });
+  const subtotal = estado.pedido.reduce((s,i) => s + i.precio*i.cantidad, 0);
+  let texto = `✅ Agregué <strong>${producto.nombre}</strong> (${formatearPrecio(producto.precio)})\n\n🛒 ${estado.pedido.reduce((s,i)=>s+i.cantidad,0)} ítem(s) — Subtotal: ${formatearPrecio(subtotal)}\n\n¿Algo más?`;
+  responderConDelay(texto, [
+    { texto:'➕ Agregar más', valor:'hacer pedido', icono:'fas fa-plus' },
+    { texto:'🛒 Ver carrito', valor:'ver carrito', icono:'fas fa-shopping-bag' },
+    { texto:'✅ Confirmar', valor:'confirmar pedido', icono:'fas fa-check' }
+  ]);
+}
+
+function mostrarCarrito() {
+  if (!estado.pedido.length) { responderConDelay('🛒 Carrito vacío.', [{ texto:'📖 Ver carta', valor:'hacer pedido', icono:'fas fa-book-open' }]); return; }
+  const { subtotal, envio, total } = calcularTotal();
+  let texto = `🛒 <strong>Tu pedido en ${estado.restauranteSeleccionado.nombre}:</strong>\n\n`;
+  estado.pedido.forEach(i => { texto += `• ${i.cantidad}x ${i.nombre} — ${formatearPrecio(i.precio*i.cantidad)}\n`; });
+    texto += `\nSubtotal: ${formatearPrecio(subtotal)}\nEnvío: ${formatearPrecio(envio)}\n━━━━━━━━━━━━━━━\n<strong>TOTAL: ${formatearPrecio(total)}</strong>\n`;
+  
+  // ⏱️ TIEMPO INTELIGENTE DE ENTREGA
+  const tiempos = calcularTiempoEntrega(estado.pedido, estado.restauranteSeleccionado, estado.coords);
+  texto += `\n━━━━━━━━━━━━━━━\n`;
+  texto += `⏱️ <strong>Tiempo estimado de entrega</strong>\n\n`;
+  texto += `🍳 <strong>Preparación: ~${tiempos.prepTime} min</strong>\n`;
+  texto += `   • Plato más lento: <em>${tiempos.platoMasLento}</em> (${tiempos.prepTimeMax} min)\n`;
+  if (tiempos.extraPorCantidad > 0) {
+    texto += `   • Extra por cantidad: +${tiempos.extraPorCantidad} min\n`;
+  }
+  texto += `\n🛵 <strong>Conductor al restaurante: ~${tiempos.dispatchTime} min</strong>\n`;
+  texto += `🚗 <strong>Viaje a tu casa: ~${tiempos.travelTime} min</strong> (${tiempos.distanciaKm} km)\n`;
+  texto += `⏸️ <strong>Margen: ${tiempos.buffer} min</strong>\n\n`;
+  texto += `━━━━━━━━━━━━━━━\n`;
+  texto += `⏰ <strong>TOTAL: ${tiempos.total} minutos</strong>\n`;
+  texto += `🕐 Llegada estimada: <strong>${tiempos.horaEntregaEstimada}</strong>\n`;
+  texto += `━━━━━━━━━━━━━━━\n\n`;
+  texto += `¿Confirmamos el pedido?`;
+  responderConDelay(texto, [
+    { texto:'✅ Confirmar', valor:'confirmar pedido', icono:'fas fa-check' },
+    { texto:'➕ Agregar más', valor:'hacer pedido', icono:'fas fa-plus' },
+    { texto:'❌ Vaciar', valor:'vaciar carrito', icono:'fas fa-trash' }
+  ]);
+}
+
+function confirmarPedido() {
+  if (!estado.pedido.length) { responderConDelay('Carrito vacío.'); return; }
+  estado.etapaPedido = 'datos_entrega';
+  estado.datosEntrega.direccion = estado.ubicacionActual;
+  responderConDelay(`📝 ¡Perfecto! Necesito algunos datos:\n\n1️⃣ ¿Cuál es tu <strong>nombre</strong>?`, null, 800);
+  estado.esperandoRespuesta = 'nombre';
+}
+
+function guardarNombre(nombre) {
+  estado.datosEntrega.nombre = nombre;
+  responderConDelay(`✅ Gracias, ${nombre}.\n\n2️⃣ ¿Tu <strong>celular</strong> (9 dígitos)?`, null, 700);
+  estado.esperandoRespuesta = 'telefono';
+}
+
+function guardarTelefono(tel) {
+  estado.datosEntrega.telefono = tel;
+  responderConDelay(`✅ Anotado.\n\n3️⃣ ¿Cómo <strong>pagas</strong>?`, [
+    { texto:'💵 Efectivo', valor:'pago efectivo', icono:'fas fa-money-bill' },
+    { texto:'📱 Yape / Plin', valor:'pago yape', icono:'fas fa-mobile-alt' },
+    { texto:'💳 Tarjeta', valor:'pago tarjeta', icono:'fas fa-credit-card' }
+  ], 700);
+  estado.esperandoRespuesta = 'pago';
+}
+
+function guardarPago(metodo) {
+  estado.datosEntrega.pago = metodo;
+  estado.esperandoRespuesta = null;
+  const { subtotal, envio, total } = calcularTotal();
+  const numPedido = 'PE-' + Math.floor(1000 + Math.random()*9000);
+  estado.numPedido = numPedido;
+  let resumen = `🎉 <strong>¡Pedido confirmado!</strong>\n\n📋 Nº: <strong>${numPedido}</strong>\n🏪 ${estado.restauranteSeleccionado.nombre}\n👤 ${estado.datosEntrega.nombre}\n📞 ${estado.datosEntrega.telefono}\n📍 ${estado.datosEntrega.direccion}\n💳 ${estado.datosEntrega.pago}\n\n🍽️ <strong>Detalle:</strong>\n`;
+  estado.pedido.forEach(i => { resumen += `• ${i.cantidad}x ${i.nombre} — ${formatearPrecio(i.precio*i.cantidad)}\n`; });
+  resumen += `\nSubtotal: ${formatearPrecio(subtotal)}\nEnvío: ${formatearPrecio(envio)}\n<strong>TOTAL: ${formatearPrecio(total)}</strong>\n\n⏱️ Entrega estimada: ${estado.restauranteSeleccionado.eta}\n\n¿Enviar por WhatsApp?`;
+  responderConDelay(resumen, [
+    { texto:'📱 Enviar WhatsApp', valor:'enviar whatsapp', icono:'fab fa-whatsapp' },
+    { texto:'🔄 Nuevo pedido', valor:'nuevo pedido', icono:'fas fa-redo' }
+  ], 1000);
+}
+
+function enviarPorWhatsApp() {
+  const { subtotal, envio, total } = calcularTotal();
+  let msg = `*🇵🇪 NUEVO PEDIDO — Pide Pe'*\n\n*Restaurante:* ${estado.restauranteSeleccionado.nombre}\n*Nº:* ${estado.numPedido || 'N/A'}\n\n*Cliente:* ${estado.datosEntrega.nombre}\n*Celular:* +51 ${estado.datosEntrega.telefono}\n*Dirección:* ${estado.datosEntrega.direccion}\n*Pago:* ${estado.datosEntrega.pago}\n\n*📋 Detalle:*\n`;
+  estado.pedido.forEach(i => { msg += `• ${i.cantidad}x ${i.nombre} — ${formatearPrecio(i.precio*i.cantidad)}\n`; });
+    const tiempos = calcularTiempoEntrega(estado.pedido, estado.restauranteSeleccionado, estado.coords);
+  msg += `\nSubtotal: ${formatearPrecio(subtotal)}\n`;
+  msg += `Envío: ${formatearPrecio(envio)}\n`;
+  msg += `*TOTAL: ${formatearPrecio(total)}*\n\n`;
+  msg += `⏱️ *Tiempo estimado: ${tiempos.total} min*\n`;
+  msg += `🕐 Llegada aprox: *${tiempos.horaEntregaEstimada}*\n`;
+  msg += `🍳 Preparación: ${tiempos.prepTime} min\n`;
+  msg += `🛵 Entrega: ${tiempos.dispatchTime + tiempos.travelTime} min\n\n`;
+  msg += `¡Gracias! 🚀`;
+  window.open(`https://wa.me/${CONFIG.telefonoWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
+  responderConDelay(`✅ ¡Abriendo WhatsApp con tu pedido!`, [{ texto:'🔄 Nuevo pedido', valor:'nuevo pedido', icono:'fas fa-redo' }]);
+}
+
+function reiniciarPedido() {
+  estado.pedido = [];
+  estado.etapaPedido = null;
+  estado.datosEntrega = { nombre:null, direccion:estado.ubicacionActual, telefono:null, pago:null };
+  estado.esperandoRespuesta = null;
+  responderConDelay(`🔄 Pedido reiniciado.`, [
+    { texto:'📖 Ver restaurantes', valor:'elegir restaurante', icono:'fas fa-list' },
+    { texto:'🍗 Pedir', valor:'hacer pedido', icono:'fas fa-shopping-cart' }
+  ]);
+}
+
+function contactarHumano() {
+  const msg = `Hola, soy ${estado.datosEntrega.nombre || 'un cliente'} de Pide Pe'. Quiero hablar con una persona.`;
+  window.open(`https://wa.me/${CONFIG.telefonoWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
+  responderConDelay(`💬 Te conecto con un humano por WhatsApp...`);
+}
+
+async function procesarEntrada(entrada) {
+  const t = normalizar(entrada);
+
+  if (estado.esperandoRespuesta === 'nombre') { guardarNombre(entrada.trim()); return; }
+  if (estado.esperandoRespuesta === 'telefono') { guardarTelefono(entrada.trim()); return; }
+
+  if (t.includes('elegir restaurante') || t.includes('ver restaurantes')) { mostrarRestaurantes(); return; }
+  if (t.includes('hacer pedido') || t.includes('pedir ahora')) { iniciarPedido(); return; }
+  if (t.includes('ver carrito')) { mostrarCarrito(); return; }
+  if (t.includes('confirmar')) { confirmarPedido(); return; }
+  if (t.includes('vaciar carrito')) { estado.pedido = []; responderConDelay('🗑️ Carrito vaciado.'); return; }
+  if (t.includes('nuevo pedido')) { reiniciarPedido(); return; }
+  if (t.includes('enviar whatsapp')) { enviarPorWhatsApp(); return; }
+  if (t.includes('hablar con humano')) { contactarHumano(); return; }
+  if (t.includes('pago efectivo') || t === 'efectivo') { guardarPago('Efectivo'); return; }
+  if (t.includes('yape') || t.includes('plin')) { guardarPago('Yape / Plin'); return; }
+  if (t.includes('pago tarjeta') || t === 'tarjeta') { guardarPago('Tarjeta'); return; }
+  if (t.startsWith('elegir ')) { elegirRestaurante(entrada.replace(/elegir\s+/i,'')); return; }
+  if (t.startsWith('categoria ')) { mostrarCategoria(entrada.replace(/categoria\s+/i,'')); return; }
+  if (t.startsWith('agregar ')) { agregarProducto(entrada.replace(/agregar\s+/i,'')); return; }
+
+  if (estado.restauranteSeleccionado) {
+    const producto = buscarProducto(t);
+    if (producto) { agregarProducto(producto.nombre); return; }
+  }
+  const restEncontrado = estado.restaurantesCercanos.find(r => normalizar(r.nombre).split(' ').some(p => p.length>3 && t.includes(p)));
+  if (restEncontrado) { elegirRestaurante(restEncontrado.nombre); return; }
+
+  if (t.match(/^(hola|buenas|hey|que tal)/)) {
+    responderConDelay('¡Hola! 👋 ¿En qué te ayudo?', [
+      { texto:'📖 Ver restaurantes', valor:'elegir restaurante', icono:'fas fa-list' },
+      { texto:'🍗 Pedir', valor:'hacer pedido', icono:'fas fa-shopping-cart' }
+    ]); return;
+  }
+  if (t.match(/gracias|chao|adios/)) { responderConDelay('¡Gracias a ti! 🇵🇪 ¡Buen provecho!'); return; }
+
+  responderConDelay('🤔 No entendí. Probá con "Ver restaurantes", "Hacer pedido" o "Hablar con humano".', [
+    { texto:'📖 Ver restaurantes', valor:'elegir restaurante', icono:'fas fa-list' },
+    { texto:'💬 Hablar con humano', valor:'hablar con humano', icono:'fas fa-user' }
+  ]);
+}
+
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null, escuchando = false;
+if (SR) {
+  recognition = new SR();
+  recognition.lang = 'es-PE';
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.onstart = () => { escuchando = true; btnMic.classList.add('listening'); btnMic.innerHTML = '<i class="fas fa-stop"></i>'; if (assistantStatus) assistantStatus.textContent = '🎤 Escuchando...'; };
+  recognition.onresult = (e) => {
+    let final = '', interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const tr = e.results[i][0].transcript;
+      if (e.results[i].isFinal) final += tr; else interim += tr;
+    }
+    if (interim) chatInput.value = interim;
+    if (final) { chatInput.value = ''; agregarMensaje(final, 'user'); procesarEntrada(final); }
+  };
+  recognition.onerror = () => {};
+  recognition.onend = () => { escuchando = false; btnMic.classList.remove('listening'); btnMic.innerHTML = '<i class="fas fa-microphone"></i>'; if (assistantStatus) assistantStatus.textContent = 'En línea · Delivery en Lima'; };
+}
+
+function renderWelcome() {
+  const el = document.getElementById('welcomeLocation');
+  if (el) el.innerHTML = `<i class="fas fa-location-dot"></i> ${estado.ubicacionActual}`;
+  const c = estado.restaurantesCercanos;
+  const stats = document.getElementById('welcomeStats');
+  const sub = document.getElementById('welcomeSubtitle');
+  if (!stats || !sub) return;
+  if (c.length > 0) {
+    sub.innerHTML = `Estos son los <strong>restaurantes cercanos</strong> a tu ubicación:`;
+    const reviews = c.reduce((s,r)=>s+r.reviews,0);
+    const best = Math.max(...c.map(r=>r.rating));
+    const fast = Math.min(...c.map(r=>parseInt(r.eta)));
+    stats.innerHTML = `
+      <div class="stat-item"><i class="fas fa-store"></i><div><strong>${c.length}</strong>Restaurantes</div></div>
+      <div class="stat-item"><i class="fas fa-star"></i><div><strong>${best.toFixed(1)}</strong>Mejor rating</div></div>
+      <div class="stat-item"><i class="fas fa-clock"></i><div><strong>${fast} min</strong>Más rápido</div></div>
+      <div class="stat-item"><i class="fas fa-comments"></i><div><strong>${reviews}</strong>Reseñas</div></div>`;
+  } else {
+    sub.innerHTML = '⚠️ No encontramos restaurantes disponibles en tu zona.';
+    stats.innerHTML = '';
+  }
+}
+
+function renderRestaurantes() {
+  const grid = document.getElementById('restaurantsGrid');
+  const badge = document.getElementById('countBadge');
+  if (!grid) return;
+  const c = estado.restaurantesCercanos;
+  if (badge) badge.textContent = `${c.length} disponibles`;
+  if (!c.length) { grid.innerHTML = ''; return; }
+  grid.innerHTML = c.map(r => {
+    const dist = calcularDistancia(estado.coords.lat, estado.coords.lng, r.lat, r.lng);
+    return `<div class="restaurant-card" data-id="${r.id}">
+      <div class="restaurant-cover" style="background-image:url('${r.cover}')">
+        <span class="restaurant-badge">● Abierto</span>
+        <span class="restaurant-eta"><i class="fas fa-clock"></i> ${r.eta}</span>
+      </div>
+      <div class="restaurant-body">
+        <div class="restaurant-name"><i class="${r.icono}"></i> ${r.nombre}</div>
+        <div class="restaurant-type"><i class="fas fa-tag"></i> ${r.tipo}</div>
+        <div class="restaurant-meta">
+          <span><i class="fas fa-star"></i> ${r.rating} (${r.reviews})</span>
+          <span><i class="fas fa-motorcycle"></i> ${formatearPrecio(r.envio)}</span>
+          <span><i class="fas fa-location-dot"></i> ${dist.toFixed(1)} km</span>
+        </div>
+        <div class="restaurant-actions">
+          <button class="btn-select" data-action="select" data-nombre="${r.nombre}"><i class="fas fa-shopping-bag"></i> Ver carta</button>
+          <button class="btn-wsp-mini" data-action="wsp" data-nombre="${r.nombre}"><i class="fab fa-whatsapp"></i></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.querySelectorAll('.restaurant-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('button')) return;
+      const nombre = card.querySelector('[data-nombre]').getAttribute('data-nombre');
+      elegirRestaurante(nombre);
+    });
+  });
+  document.querySelectorAll('[data-action="select"]').forEach(btn => {
+    btn.addEventListener('click', (e) => { e.stopPropagation(); elegirRestaurante(btn.getAttribute('data-nombre')); });
+  });
+  document.querySelectorAll('[data-action="wsp"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const msg = `Hola, quiero pedir en ${btn.getAttribute('data-nombre')}. Mi ubicación: ${estado.ubicacionActual}`;
+      window.open(`https://wa.me/${CONFIG.telefonoWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
+    });
+  });
+}
+
+function renderRestauranteSeleccionado() {
+  const r = estado.restauranteSeleccionado;
+  if (!r) return;
+  document.getElementById('selRestName').textContent = r.nombre;
+  document.getElementById('selRestInfo').innerHTML = `${r.tipo} · ⭐ ${r.rating} · ⏱️ ${r.eta} · 🚚 ${formatearPrecio(r.envio)}`;
+  document.getElementById('selIcon').className = r.icono;
+  const tabs = document.getElementById('categoriaTabs');
+  tabs.innerHTML = Object.keys(r.categorias).map(cat => `<button class="cat-tab ${cat===estado.categoriaActiva?'active':''}" data-cat="${cat}">${cat}</button>`).join('');
+  tabs.querySelectorAll('.cat-tab').forEach(t => t.addEventListener('click', () => { estado.categoriaActiva = t.getAttribute('data-cat'); renderRestauranteSeleccionado(); }));
+  const grid = document.getElementById('productosGrid');
+  const productos = r.categorias[estado.categoriaActiva] || [];
+  grid.innerHTML = productos.map(p => `<div class="producto-card">
+    <div class="producto-img" style="background-image:url('${p.image}')"></div>
+    <div class="producto-info">
+      <div class="producto-nombre">${p.nombre}</div>
+      <div class="producto-desc">${p.descripcion}</div>
+      <div class="producto-bottom">
+        <span class="producto-precio">${formatearPrecio(p.precio)}</span>
+        <button class="btn-add-mini" data-nombre="${p.nombre}"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+  </div>`).join('');
+  grid.querySelectorAll('.btn-add-mini').forEach(btn => btn.addEventListener('click', () => {
+    agregarProducto(btn.getAttribute('data-nombre'));
+    if (assistantWindow.classList.contains('hidden')) {
+      assistantWindow.classList.remove('hidden');
+      const dot = smartBtn.querySelector('.notification-dot');
+      if (dot) dot.style.display = 'none';
+      if (chatMessages.children.length === 0) saludoInicial();
+    }
+  }));
+}
+
+const addressInput = document.getElementById('addressInput');
+const searchBtn = document.getElementById('searchBtn');
+const gpsBtn = document.getElementById('gpsBtn');
+
+function actualizarUbicacion(direccion) {
+  estado.ubicacionActual = direccion.trim() || 'Miraflores, Lima';
+  estado.restaurantesCercanos = buscarRestaurantesCercanos(estado.ubicacionActual);
+  estado.restauranteSeleccionado = null;
+  estado.pedido = [];
+  const panel = document.getElementById('selectedRestaurantPanel');
+  if (panel) panel.classList.add('hidden');
+  renderWelcome();
+  renderRestaurantes();
+}
+
+searchBtn.addEventListener('click', () => {
+  const dir = addressInput.value;
+  if (!dir.trim()) { alert('Ingresá un distrito o dirección'); return; }
+  const orig = searchBtn.innerHTML;
+  searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+  searchBtn.disabled = true;
+  setTimeout(() => {
+    actualizarUbicacion(dir);
+    searchBtn.innerHTML = orig;
+    searchBtn.disabled = false;
+  }, 400);
+});
+
+addressInput.addEventListener('keypress', (e) => { if (e.key==='Enter') { e.preventDefault(); searchBtn.click(); } });
+
+gpsBtn.addEventListener('click', async () => {
+  if (!navigator.geolocation) {
+    alert('❌ Tu navegador no soporta geolocalización.');
+    return;
+  }
+  if (!window.isSecureContext) {
+    alert('⚠️ El GPS solo funciona en HTTPS o http://localhost');
+    return;
+  }
+
+  const orig = gpsBtn.innerHTML;
+  gpsBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  gpsBtn.classList.add('loading');
+  gpsBtn.disabled = true;
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      try {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const precision = Math.round(pos.coords.accuracy || 0);
+        estado.coords = { lat, lng };
+        estado.gpsUsado = true;
+        estado.gpsListo = true;
+
+        // 🌐 Geocodificación inversa REAL con Google Maps
+        console.log('🌐 Consultando Google Maps API...');
+        const geo = await detectarDistritoPorCoords(lat, lng);
+        const direccion = `${geo.distrito}, ${geo.ciudad}`;
+
+        addressInput.value = direccion;
+        actualizarUbicacion(direccion);
+
+        const msg = `📍 <strong>¡Ubicación detectada!</strong>\n\n📌 <strong>${direccion}</strong>\n🎯 Coordenadas: ${lat.toFixed(4)}, ${lng.toFixed(4)}\n📏 Precisión: ±${precision} m`;
+
+        if (assistantWindow.classList.contains('hidden')) {
+          assistantWindow.classList.remove('hidden');
+          const dot = smartBtn.querySelector('.notification-dot');
+          if (dot) dot.style.display = 'none';
+        }
+
+        if (chatMessages.children.length === 0) {
+          setTimeout(() => { agregarMensaje(msg, 'bot'); setTimeout(saludoInicial, 800); }, 300);
+        } else {
+          setTimeout(() => agregarMensaje(msg, 'bot'), 300);
+        }
+
+        gpsBtn.innerHTML = '<i class="fas fa-check"></i>';
+        gpsBtn.classList.remove('loading');
+        gpsBtn.classList.add('success');
+
+        setTimeout(() => {
+          gpsBtn.innerHTML = orig;
+          gpsBtn.classList.remove('success');
+          gpsBtn.disabled = false;
+        }, 2000);
+      } catch (e) {
+        console.error('Error en GPS:', e);
+        alert('Error al procesar la ubicación: ' + e.message);
+        gpsBtn.innerHTML = orig;
+        gpsBtn.classList.remove('loading');
+        gpsBtn.disabled = false;
+      }
+    },
+    (err) => {
+      let msg = '';
+      switch (err.code) {
+        case 1: msg = '🚫 Permiso denegado. Click en el candado 🔒 → Ubicación → Permitir'; break;
+        case 2: msg = '📡 Ubicación no disponible.'; break;
+        case 3: msg = '⏱️ Tiempo agotado. Intentá de nuevo.'; break;
+        default: msg = '❌ Error: ' + err.message;
+      }
+      alert(msg);
+      gpsBtn.innerHTML = '<i class="fas fa-times"></i>';
+      gpsBtn.classList.remove('loading');
+      gpsBtn.classList.add('error');
+      setTimeout(() => {
+        gpsBtn.innerHTML = orig;
+        gpsBtn.classList.remove('error');
+        gpsBtn.disabled = false;
+      }, 2000);
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+  );
+});
+
+smartBtn.addEventListener('click', () => {
+  if (assistantWindow.classList.contains('hidden')) {
+    assistantWindow.classList.remove('hidden');
+    const dot = smartBtn.querySelector('.notification-dot');
+    if (dot) dot.style.display = 'none';
+    if (chatMessages.children.length === 0) saludoInicial();
+  } else {
+    assistantWindow.classList.add('hidden');
+  }
+});
+document.getElementById('btnCloseAssistant').addEventListener('click', () => {
+  assistantWindow.classList.add('hidden');
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+});
+document.getElementById('btnSend').addEventListener('click', () => {
+  const txt = chatInput.value.trim();
+  if (!txt) return;
+  agregarMensaje(txt, 'user');
+  chatInput.value = '';
+  procesarEntrada(txt);
+});
+chatInput.addEventListener('keypress', (e) => { if (e.key==='Enter') { e.preventDefault(); document.getElementById('btnSend').click(); } });
+btnMic.addEventListener('click', () => {
+  if (!recognition) { agregarMensaje('⚠️ Tu navegador no soporta reconocimiento de voz.', 'bot'); return; }
+  if (escuchando) recognition.stop();
+  else try { recognition.start(); } catch(e) { console.warn(e); }
+});
+
+// ============================================================
+// INIT — GPS AUTOMÁTICO AL CARGAR
+// ============================================================
+function pedirUbicacionGPS() {
+  if (!navigator.geolocation) {
+    console.warn('⚠️ Navegador sin GPS');
+    const sub = document.getElementById('welcomeSubtitle');
+    if (sub) sub.innerHTML = '⚠️ Tu navegador no soporta GPS. Escribí tu distrito arriba.';
+    actualizarUbicacion('Miraflores, Lima');
+    return;
+  }
+  
+  if (!window.isSecureContext) {
+    console.warn('⚠️ Contexto no seguro. Usá http://localhost:3000');
+    const sub = document.getElementById('welcomeSubtitle');
+    if (sub) sub.innerHTML = '⚠️ Abrí la app en http://localhost:3000 para activar el GPS.';
+    actualizarUbicacion('Miraflores, Lima');
+    return;
+  }
+
+  console.log('📡 Pidiendo ubicación GPS...');
+  const sub = document.getElementById('welcomeSubtitle');
+  if (sub) sub.innerHTML = '📡 Solicitando permiso de ubicación...';
+  
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      try {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        estado.coords = { lat, lng };
+        estado.gpsUsado = true;
+        estado.gpsListo = true;
+
+        // 🌐 Geocodificación inversa REAL con Google Maps
+        console.log('🌐 Consultando Google Maps para geocodificación inversa...');
+        const geo = await detectarDistritoPorCoords(lat, lng);
+        const direccion = `${geo.distrito}, ${geo.ciudad}`;
+        
+        const input = document.getElementById('addressInput');
+        if (input) input.value = direccion;
+        actualizarUbicacion(direccion);
+
+        console.log(`✅ GPS OK: ${direccion} (${lat.toFixed(4)}, ${lng.toFixed(4)})`);
+        
+        // Feedback visual en el botón GPS
+        const gpsBtn = document.getElementById('gpsBtn');
+        if (gpsBtn) {
+          gpsBtn.classList.add('success');
+          gpsBtn.innerHTML = '<i class="fas fa-check"></i>';
+          setTimeout(() => {
+            gpsBtn.classList.remove('success');
+            gpsBtn.innerHTML = '<i class="fas fa-location-crosshairs"></i>';
+          }, 2500);
+        }
+      } catch (e) {
+        console.error('Error procesando GPS:', e);
+        actualizarUbicacion('Miraflores, Lima');
+      }
+    },
+    (err) => {
+      console.warn('⚠️ GPS error ' + err.code + ':', err.message);
+      let msg = '';
+      switch(err.code) {
+        case 1: msg = '🚫 Permiso denegado. Click en el candado 🔒 → Ubicación → Permitir'; break;
+        case 2: msg = '📡 Ubicación no disponible.'; break;
+        case 3: msg = '⏱️ Tiempo agotado.'; break;
+      }
+      const subEl = document.getElementById('welcomeSubtitle');
+      if (subEl) subEl.innerHTML = msg || '⚠️ No pudimos obtener tu ubicación';
+      const locEl = document.getElementById('welcomeLocation');
+      if (locEl) locEl.innerHTML = '<i class="fas fa-location-dot"></i> Ubicación no detectada';
+      
+      // Fallback
+      actualizarUbicacion('Miraflores, Lima');
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+  );
+}
+
+function init() {
+  console.log('🇵🇪 Pide Pe\' iniciando...');
+  // Pedir GPS automáticamente (con delay para que cargue Google Maps)
+  setTimeout(() => {
+    if (typeof pedirUbicacionGPS === 'function') {
+      pedirUbicacionGPS();
+    } else {
+      // Fallback: usar Miraflores
+      actualizarUbicacion('Miraflores, Lima');
+    }
+  }, 1500);
+  console.log('🇵🇪 Pide Pe\' iniciando...');
+  
+  // Pedir GPS automáticamente al cargar
+  if (navigator.geolocation && window.isSecureContext) {
+    console.log('📡 Solicitando ubicación GPS automáticamente...');
+    
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        estado.coords = { lat, lng };
+        estado.gpsUsado = true;
+        estado.gpsListo = true;
+
+        const { distrito, ciudad } = detectarDistritoPorCoords(lat, lng);
+        const direccion = `${distrito}, ${ciudad}`;
+        addressInput.value = direccion;
+        actualizarUbicacion(direccion);
+
+        console.log(`✅ Ubicación: ${direccion}`);
+        console.log(`🎯 Coordenadas: ${lat}, ${lng}`);
+      },
+      (err) => {
+        console.warn('⚠️ GPS no disponible:', err.message);
+        // Fallback: usar ubicación por defecto
+        addressInput.value = 'Miraflores, Lima';
+        actualizarUbicacion('Miraflores, Lima');
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+    );
+  } else {
+    console.warn('⚠️ GPS no soportado o contexto inseguro');
+    addressInput.value = 'Miraflores, Lima';
+    actualizarUbicacion('Miraflores, Lima');
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
