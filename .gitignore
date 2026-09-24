@@ -37,3 +37,6 @@ desktop.ini
 # Logs
 *.log
 npm-debug.log*
+# Claves locales (NO subir)
+keys.local.json
+*.local.json
